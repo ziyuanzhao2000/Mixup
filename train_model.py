@@ -188,12 +188,22 @@ def test_model(model, training_set, test_set):
     return clf.score(H_te, y_te)
 
 # Finally, training the model!!
+def unison_shuffled_copies(a, b):
+    assert len(a) == len(b)
+    p = np.random.permutation(len(a))
+    return a[p], b[p]
+
+np.random.seed(0)
+x_tr, y_tr = unison_shuffled_copies(x_tr, y_tr)
+x_te, y_te = unison_shuffled_copies(x_te, y_te)
+ntrain = 10 # set the size of partial training set to use
+
 device = 'cuda' if th.cuda.is_available() else 'cpu'
-epochs, LossList, AccList = 200, [], []
+epochs, LossList, AccList = 2, [], []
 
 alpha = 1.0
 
-training_set = MyDataset(x_tr, y_tr)
+training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
 model = FCN(training_set.x.shape[1]).to(device)
@@ -201,7 +211,7 @@ model = FCN(training_set.x.shape[1]).to(device)
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
                                               optimizer, alpha, epochs)
-
+th.save(model, os.path.join(basepath, 'model'))
 
 print(f"Score for alpha = {alpha}: {AccListM[-1]}")
 
@@ -214,3 +224,4 @@ plt.subplot(122)
 plt.plot(AccListM)
 plt.title('Accuracy')
 plt.show()
+plt.savefig(os.path.join(basepath, 'loss_acc_plot.png'))
