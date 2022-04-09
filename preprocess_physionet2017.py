@@ -5,7 +5,7 @@ import wfdb
 import csv
 from tqdm import tqdm
 
-alias = 'training2017'
+alias = 'validation'
 basepath = f'{os.getcwd()}/data/{alias}'
 sampling_fs = 300 # Hz
 window_len = 1500 # samples

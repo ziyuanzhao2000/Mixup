@@ -5,8 +5,8 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 
 
-from IPython.display import clear_output
-from sktime.datasets import load_gunpoint
+#from IPython.display import clear_output
+#from sktime.datasets import load_gunpoint
 from torch.utils.data import Dataset, DataLoader
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -26,7 +26,7 @@ y_te = np.load(os.path.join(basepath, 'validation', f"output_{window_len}.npy"))
 class MyDataset(Dataset):
     def __init__(self, x, y):
 
-        device = 'cpu'
+        device = 'cuda'
         self.x = th.tensor(x, dtype=th.float, device=device)
         self.y = th.tensor(y, dtype=th.long, device=device)
 
@@ -102,8 +102,7 @@ class MixUpLoss(th.nn.Module):
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
 
     device = 'cuda' if th.cuda.is_available() else 'cpu'
-    batch_size_tr = len(training_set.x)
-
+    batch_size_tr = 32 #len(training_set.x)
     LossList, AccList
     criterion = MixUpLoss(device, batch_size_tr)
 
@@ -196,7 +195,7 @@ def unison_shuffled_copies(a, b):
 np.random.seed(0)
 x_tr, y_tr = unison_shuffled_copies(x_tr, y_tr)
 x_te, y_te = unison_shuffled_copies(x_te, y_te)
-ntrain = 10 # set the size of partial training set to use
+ntrain = len(x_tr) # set the size of partial training set to use
 
 device = 'cuda' if th.cuda.is_available() else 'cpu'
 epochs, LossList, AccList = 2, [], []
