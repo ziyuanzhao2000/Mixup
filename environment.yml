@@ -12,4 +12,3 @@ dependencies:
   - sktime
   - tqdm
   - wfdb
-prefix: /Users/ziyuanzhao/opt/anaconda3/envs/Sandbox
