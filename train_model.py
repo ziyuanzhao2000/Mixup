@@ -141,7 +141,7 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
         print(f"Accuracy: {AccList[-1]}")
         print("-"*50)
 
-        if epoch % 10 == 0 and epoch != 0: clear_output()
+        #if epoch % 10 == 0 and epoch != 0: clear_output()
 
     return LossList, AccList
 
@@ -198,7 +198,7 @@ x_te, y_te = unison_shuffled_copies(x_te, y_te)
 ntrain = len(x_tr) # set the size of partial training set to use
 
 device = 'cuda' if th.cuda.is_available() else 'cpu'
-epochs, LossList, AccList = 2, [], []
+epochs, LossList, AccList = 200, [], []
 
 alpha = 1.0
 
