@@ -20,8 +20,8 @@ alias = 'sleepEDF'
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias, f"train_input.npy"))
-y_tr = np.load(os.path.join(basepath, alias, f"test_output.npy"))
-x_te = np.load(os.path.join(basepath, alias, f"train_input.npy"))
+y_tr = np.load(os.path.join(basepath, alias, f"train_output.npy"))
+x_te = np.load(os.path.join(basepath, alias, f"test_input.npy"))
 y_te = np.load(os.path.join(basepath, alias, f"test_output.npy"))
 
 class MyDataset(Dataset):
