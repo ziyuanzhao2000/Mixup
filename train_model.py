@@ -15,13 +15,14 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-window_len = 1500
+window_len = 178
+alias = 'sleepEDF'
 basepath = f'{os.getcwd()}/data'
 
-x_tr = np.load(os.path.join(basepath, 'training2017', f"input_{window_len}.npy"))
-y_tr = np.load(os.path.join(basepath, 'training2017', f"output_{window_len}.npy"))
-x_te = np.load(os.path.join(basepath, 'validation', f"input_{window_len}.npy"))
-y_te = np.load(os.path.join(basepath, 'validation', f"output_{window_len}.npy"))
+x_tr = np.load(os.path.join(basepath, alias, f"train_input.npy"))
+y_tr = np.load(os.path.join(basepath, alias, f"test_output.npy"))
+x_te = np.load(os.path.join(basepath, alias, f"train_input.npy"))
+y_te = np.load(os.path.join(basepath, alias, f"test_output.npy"))
 
 class MyDataset(Dataset):
     def __init__(self, x, y):
