@@ -15,8 +15,8 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-window_len = 5120
-alias = 'pFD_A'
+window_len = 178
+alias = 'epilepsy'
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias, f"train_input.npy"))
