@@ -75,7 +75,7 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
     device = 'cuda' if th.cuda.is_available() else 'cpu'
     batch_size_tr = 20 #len(training_set.x)
     LossList, AccList
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
 
     training_generator = DataLoader(training_set, batch_size=batch_size_tr,
                                     shuffle=True, drop_last=True)
