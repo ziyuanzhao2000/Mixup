@@ -120,12 +120,11 @@ def test_model(model, training_set, test_set):
     N_te = len(test_set.x)
     test_generator = DataLoader(test_set, batch_size= 1,
                                     shuffle=True, drop_last=False)
-    yhat_te = th.zeros((N_te, 128))
+    yhat_te = th.zeros((N_te, n_classes))
     y_te = th.zeros((N_te), dtype=th.long)
 
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
-            print(yhat_te.shape, model(x_te).shape)
             yhat_te[idx_te] = model(x_te) # yhat are pre-softmax values
             y_te[idx_te] = y_te_i
 
