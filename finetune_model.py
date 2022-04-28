@@ -182,7 +182,6 @@ def test_model(model, training_set, test_set):
             y_te[idx_te] = y_te_i
 
     H_te = to_np(nn.functional.normalize(H_te)) # latent feature
-    y_te = to_np(y_te) # target
     target = y_te
     target_prob = F.one_hot(target, num_classes=n_classes)
     print(H_te.shape, y_te.shape)
@@ -192,7 +191,7 @@ def test_model(model, training_set, test_set):
     print(pred_prob.shape)
     print(pred_prob)
     exit(1)
-    return clf.score(H_te, y_te)
+    return clf.score(H_te, to_np(y_te))
 
 # Finally, training the model!!
 def unison_shuffled_copies(a, b):
