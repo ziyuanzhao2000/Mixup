@@ -75,6 +75,7 @@ class FCN_clf(nn.Module):
     def __init__(self, fcn_model):
         super(FCN_clf, self).__init__()
         self.encoder = fcn_model
+        self.encoder.train()
         self.proj_head = nn.Sequential(
             nn.Linear(128, 32),
             nn.BatchNorm1d(32),
@@ -85,7 +86,7 @@ class FCN_clf(nn.Module):
 
     def forward(self, x):
         _, feats = self.encoder(x)
-        print(feats)
+        print('feats', feats)
         return self.proj_head(feats)
 
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
@@ -101,12 +102,10 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
     for epoch in range(epochs):
 
         for x, y in training_generator:
-
             model.train()
-
             optimizer.zero_grad()
             z = model(x)
-            print(z)
+            print('z', z)
             loss= criterion(z, y[:,0])
             loss.backward()
             optimizer.step()
