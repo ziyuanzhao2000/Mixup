@@ -182,7 +182,7 @@ model = th.load(os.path.join(basepath, model_name), map_location=th.device('cuda
 #         for n, l in layer.named_modules():
 #             if hasattr(l, 'reset_parameters'):
 #                 l.reset_parameters()
-# model = FCN_clf(model).to(device)
+model = FCN_clf(model).to(device)
 
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
