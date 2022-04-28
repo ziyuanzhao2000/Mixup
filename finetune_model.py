@@ -86,6 +86,7 @@ class FCN_clf(nn.Module):
 
     def forward(self, x):
         _, feats = self.encoder(x)
+        print('feats', feats)
         return self.proj_head(feats)
 
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
