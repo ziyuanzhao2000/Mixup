@@ -133,12 +133,12 @@ def test_model(model, training_set, test_set):
     pred_prob = yhat_te
     pred = pred_prob.argmax(dim=1)
     metrics_dict = {}
-        metrics_dict['Accuracy'] = sklearn.metrics.accuracy_score(target, pred)
-        metrics_dict['Precision'] = sklearn.metrics.precision_score(target, pred, average='macro')
-        metrics_dict['Recall'] = sklearn.metrics.recall_score(target, pred, average='macro')
-        metrics_dict['F1'] = sklearn.metrics.f1_score(target, pred, average='macro')
-        metrics_dict['AUROC'] = sklearn.metrics.roc_auc_score(target_prob, pred_prob, multi_class='ovr')
-        metrics_dict['AUPRC'] = sklearn.metrics.average_precision_score(target_prob, pred_prob)
+    metrics_dict['Accuracy'] = sklearn.metrics.accuracy_score(target, pred)
+    metrics_dict['Precision'] = sklearn.metrics.precision_score(target, pred, average='macro')
+    metrics_dict['Recall'] = sklearn.metrics.recall_score(target, pred, average='macro')
+    metrics_dict['F1'] = sklearn.metrics.f1_score(target, pred, average='macro')
+    metrics_dict['AUROC'] = sklearn.metrics.roc_auc_score(target_prob, pred_prob, multi_class='ovr')
+    metrics_dict['AUPRC'] = sklearn.metrics.average_precision_score(target_prob, pred_prob)
     print(metrics_dict)
     return metrics_dict['Accuracy']
 
