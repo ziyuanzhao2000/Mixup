@@ -70,43 +70,12 @@ class FCN(nn.Module):
 
         return out, h
 
-class MixUpLoss(th.nn.Module):
-
-    def __init__(self, device, batch_size):
-        super(MixUpLoss, self).__init__()
-
-        self.tau = 0.5
-        self.device = device
-        self.batch_size = batch_size
-        self.logsoftmax = nn.LogSoftmax(dim=1)
-
-    def forward(self, z_aug, z_1, z_2, lam):
-
-        z_1 = nn.functional.normalize(z_1)
-        z_2 = nn.functional.normalize(z_2)
-        z_aug = nn.functional.normalize(z_aug)
-
-        labels_lam_0 = lam*th.eye(self.batch_size, device=self.device)
-        labels_lam_1 = (1-lam)*th.eye(self.batch_size, device=self.device)
-
-        labels = th.cat((labels_lam_0, labels_lam_1), 1)
-
-        logits = th.cat((th.mm(z_aug, z_1.T),
-                         th.mm(z_aug, z_2.T)), 1)
-
-        loss = self.cross_entropy(logits / self.tau, labels)
-
-        return loss
-
-    def cross_entropy(self, logits, soft_targets):
-        return th.mean(th.sum(- soft_targets * self.logsoftmax(logits), 1))
-
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
 
     device = 'cuda' if th.cuda.is_available() else 'cpu'
     batch_size_tr = 20 #len(training_set.x)
     LossList, AccList
-    criterion = MixUpLoss(device, batch_size_tr)
+    criterion = torch.nn.CrossEntropyLoss()
 
     training_generator = DataLoader(training_set, batch_size=batch_size_tr,
                                     shuffle=True, drop_last=True)
@@ -118,23 +87,11 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
             model.train()
 
             optimizer.zero_grad()
-
-            x_1 = x
-            x_2 = x[th.randperm(len(x))]
-
-            lam = np.random.beta(alpha, alpha)
-
-            x_aug = lam * x_1 + (1-lam) * x_2
-
-            z_1, _ = model(x_1)
-            z_2, _ = model(x_2)
-            z_aug, _ = model(x_aug)
-
-            loss= criterion(z_aug, z_1, z_2, lam)
+            z, _ = model(x)
+            loss= criterion(z, y)
             loss.backward()
             optimizer.step()
             LossList.append(loss.item())
-
 
         AccList.append(test_model(model, training_set, test_set))
 
@@ -150,48 +107,29 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
 def test_model(model, training_set, test_set):
 
     model.eval()
-
-    N_tr = len(training_set.x)
     N_te = len(test_set.x)
-
-    training_generator = DataLoader(training_set, batch_size=1,
-                                    shuffle=True, drop_last=False)
     test_generator = DataLoader(test_set, batch_size= 1,
                                     shuffle=True, drop_last=False)
-
-    H_tr = th.zeros((N_tr, 128))
-    y_tr = th.zeros((N_tr), dtype=th.long)
-
-    H_te = th.zeros((N_te, 128))
+    yhat_te = th.zeros((N_te, 128))
     y_te = th.zeros((N_te), dtype=th.long)
-
-    for idx_tr, (x_tr, y_tr_i) in enumerate(training_generator):
-        with th.no_grad():
-            _, H_tr_i = model(x_tr)
-            H_tr[idx_tr] = H_tr_i
-            y_tr[idx_tr] = y_tr_i
-
-    H_tr = to_np(nn.functional.normalize(H_tr))
-    y_tr = to_np(y_tr)
-
 
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
-            _, H_te_i = model(x_te)
-            H_te[idx_te] = H_te_i
+            yhat_te_i, = self.logits(model(x_te))
+            yhat_te[idx_te] = yhat_te_i
             y_te[idx_te] = y_te_i
 
-    H_te = to_np(nn.functional.normalize(H_te)) # latent feature
     target = y_te
     target_prob = F.one_hot(target, num_classes=n_classes)
     print(H_te.shape, y_te.shape)
     #print(H_te, y_te)
-    clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
-    pred_prob = clf.predict_proba(H_te)
-    print(pred_prob.shape)
-    print(pred_prob)
+    pred_prob = yhat_te
+    pred = pred_prob.argmax(dim=1)
+    print(pred_prob.shape, pred.shape)
+    print(pred_prob, pred)
+    acc = 0
     exit(1)
-    return clf.score(H_te, to_np(y_te))
+    return acc
 
 # Finally, training the model!!
 def unison_shuffled_copies(a, b):
