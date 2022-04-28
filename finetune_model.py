@@ -75,7 +75,12 @@ class FCN_clf(nn.Module):
     def __init__(self, fcn_model):
         super(FCN_clf, self).__init__()
         self.encoder = fcn_model
-        self.proj_head = nn.Linear(128, n_classes)
+        self.proj_head = nn.Sequential(
+            nn.Linear(128, 32),
+            nn.BatchNorm1d(128),
+            nn.ReLU(),
+            nn.Linear(32, n_classes)
+        )
 
     def forward(self, x):
         _, feats = self.encoder(x)
