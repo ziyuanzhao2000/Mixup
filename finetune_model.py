@@ -86,7 +86,6 @@ class FCN_clf(nn.Module):
 
     def forward(self, x):
         _, feats = self.encoder(x)
-        print('feats', feats)
         return self.proj_head(feats)
 
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
@@ -105,8 +104,6 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
             model.train()
             optimizer.zero_grad()
             z = model(x)
-            print('z', z, y[:,0])
-            exit(1)
             loss = criterion(z, y[:,0])
             loss.backward()
             optimizer.step()
@@ -133,6 +130,8 @@ def test_model(model, training_set, test_set):
 
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
+            yhat_te_i = model(x_te)
+            print(x_te, yhat_te_i)
             yhat_te[idx_te] = model(x_te) # yhat are pre-softmax values
             y_te[idx_te] = y_te_i
 
