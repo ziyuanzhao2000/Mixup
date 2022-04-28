@@ -15,8 +15,9 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-window_len = 178
-alias = 'epilepsy'
+window_len = 206
+alias = 'HAR'
+n_channels = 3
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias, f"train_input.npy"))
@@ -207,7 +208,7 @@ alpha = 1.0
 training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
-model = FCN(training_set.x.shape[1]).to(device)
+model = FCN(n_channels).to(device)
 
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
