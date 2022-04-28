@@ -172,6 +172,10 @@ training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
 model = th.load(os.path.join(basepath, model_name), map_location=th.device('cuda'))
+for name, param in model.named_parameters():
+    if param.requires_grad:
+        print(name, param.data)
+
 # reset weights of proj_head
 for name, layer in model.named_children():
     if name == 'proj_head':
