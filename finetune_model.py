@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from torch.utils.data import Dataset, DataLoader
 from sklearn.neighbors import KNeighborsClassifier
-
+import torch.nn.functional as F
 
 def to_np(x):
     return x.cpu().detach().numpy()
@@ -182,11 +182,15 @@ def test_model(model, training_set, test_set):
 
     H_te = to_np(nn.functional.normalize(H_te)) # latent feature
     y_te = to_np(y_te) # target
+    target = y_te
+    target_prob = F.one_hot(target, num_classes=model.n_classes)
     print(H_te.shape, y_te.shape)
-    print(H_te, y_te)
-    exit(1)
+    #print(H_te, y_te)
     clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
-
+    pred_prob = clf.predict_proba(H_ye)
+    print(pred_prob.shape)
+    print(pred_prob)
+    exit(1)
     return clf.score(H_te, y_te)
 
 # Finally, training the model!!
