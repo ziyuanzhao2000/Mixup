@@ -130,8 +130,6 @@ def test_model(model, training_set, test_set):
 
     target = y_te
     target_prob = F.one_hot(target, num_classes=n_classes)
-    print(H_te.shape, y_te.shape)
-    #print(H_te, y_te)
     pred_prob = yhat_te
     pred = pred_prob.argmax(dim=1)
     print(pred_prob.shape, pred.shape)
