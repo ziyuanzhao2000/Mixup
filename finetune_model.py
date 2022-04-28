@@ -88,6 +88,9 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
 
             optimizer.zero_grad()
             z, _ = model(x)
+            print(z.shape, y.shape)
+            print(z)
+            print(y)
             loss= criterion(z, y)
             loss.backward()
             optimizer.step()
