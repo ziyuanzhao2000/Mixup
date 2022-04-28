@@ -117,14 +117,13 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
         print(f"Accuracy: {AccList[-1]}")
         print("-"*50)
 
-        if epoch % 10 == 0 and epoch != 0: clear_output()
-
     return LossList, AccList
 
 def test_model(model, training_set, test_set):
 
     model.eval()
     N_te = len(test_set.x)
+    print(N_te)
     test_generator = DataLoader(test_set, batch_size= 1,
                                     shuffle=True, drop_last=False)
     yhat_te = th.zeros((N_te, n_classes))
@@ -139,6 +138,9 @@ def test_model(model, training_set, test_set):
     target_prob = F.one_hot(target, num_classes=n_classes)
     pred_prob = yhat_te
     pred = pred_prob.argmax(dim=1)
+    print(target)
+    print(pred)
+    print(pred_prob)
     metrics_dict = {}
     metrics_dict['Accuracy'] = sklearn.metrics.accuracy_score(target, pred)
     metrics_dict['Precision'] = sklearn.metrics.precision_score(target, pred, average='macro')
