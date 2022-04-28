@@ -184,7 +184,6 @@ def test_model(model, training_set, test_set):
     y_te = to_np(y_te) # target
     print(H_te.shape, y_te.shape)
     print(H_te, y_te)
-    exit(1)
     clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
 
     return clf.score(H_te, y_te)
@@ -208,7 +207,7 @@ alpha = 1.0
 training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
-model = th.load(os.path.join(basepath, model_name), map_location=th.device('cuda'))
+model = th.load(os.path.join(basepath, model_name), map_location=th.device('cpu'))
 # reset weights of proj_head
 for name, layer in model.named_children():
     if name == 'proj_head':
