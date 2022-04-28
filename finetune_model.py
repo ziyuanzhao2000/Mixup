@@ -76,7 +76,7 @@ class FCN_clf(nn.Module):
         self.encoder = fcn_model
         self.proj_head = nn.Linear(128, n_classes)
 
-    def forward(self, x)
+    def forward(self, x):
         _, feats = self.encoder(x)
         return self.proj_head(feats)
 
