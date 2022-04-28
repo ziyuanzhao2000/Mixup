@@ -16,6 +16,7 @@ import os
 alias = 'epilepsy'
 model_name = 'sleepEDF_model'
 window_len = 178
+n_classes = 2
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias,  f"train_input.npy"))
@@ -183,7 +184,7 @@ def test_model(model, training_set, test_set):
     H_te = to_np(nn.functional.normalize(H_te)) # latent feature
     y_te = to_np(y_te) # target
     target = y_te
-    target_prob = F.one_hot(target, num_classes=model.n_classes)
+    target_prob = F.one_hot(target, num_classes=n_classes)
     print(H_te.shape, y_te.shape)
     #print(H_te, y_te)
     clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
