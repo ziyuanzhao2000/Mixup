@@ -78,7 +78,7 @@ class FCN_clf(nn.Module):
 
     def forward(self, x):
         _, feats = self.encoder(x)
-        return self.proj_head(feats), feats
+        return self.proj_head(feats)
 
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
 
@@ -97,7 +97,7 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
             model.train()
 
             optimizer.zero_grad()
-            z, _ = model(x)
+            z = model(x)
             print(z.shape, y.shape)
             print(z)
             print(y)
@@ -128,8 +128,7 @@ def test_model(model, training_set, test_set):
 
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
-            yhat_te_i, = self.logits(model(x_te))
-            yhat_te[idx_te] = yhat_te_i
+            yhat_te[idx_te] = self.logits(model(x_te))
             y_te[idx_te] = y_te_i
 
     target = y_te
