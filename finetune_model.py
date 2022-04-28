@@ -14,10 +14,10 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-alias = 'pFD_B'
-model_name = 'sleepEDF_model'
-window_len = 5120
-n_classes = 3
+alias = 'AHAR'
+model_name = 'HAR_model'
+window_len = 206
+n_classes = 2
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias,  f"train_input.npy"))
@@ -172,17 +172,17 @@ training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
 model = th.load(os.path.join(basepath, model_name), map_location=th.device('cuda'))
-for name, param in model.named_parameters():
-    if param.requires_grad:
-        print(name, param.data)
+# for name, param in model.named_parameters():
+#     if param.requires_grad:
+#         print(name, param.data)
 
 # reset weights of proj_head
-for name, layer in model.named_children():
-    if name == 'proj_head':
-        for n, l in layer.named_modules():
-            if hasattr(l, 'reset_parameters'):
-                l.reset_parameters()
-model = FCN_clf(model).to(device)
+# for name, layer in model.named_children():
+#     if name == 'proj_head':
+#         for n, l in layer.named_modules():
+#             if hasattr(l, 'reset_parameters'):
+#                 l.reset_parameters()
+# model = FCN_clf(model).to(device)
 
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
