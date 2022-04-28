@@ -187,7 +187,7 @@ def test_model(model, training_set, test_set):
     print(H_te.shape, y_te.shape)
     #print(H_te, y_te)
     clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
-    pred_prob = clf.predict_proba(H_ye)
+    pred_prob = clf.predict_proba(H_te)
     print(pred_prob.shape)
     print(pred_prob)
     exit(1)
