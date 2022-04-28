@@ -70,6 +70,16 @@ class FCN(nn.Module):
 
         return out, h
 
+class FCN_clf(nn.Module):
+    def __init__(self, fcn_model):
+        super(FCN_clf, self).__init__()
+        self.encoder = fcn_model
+        self.proj_head = nn.Linear(128, n_classes)
+
+    def forward(self, x)
+        _, feats = self.encoder(x)
+        return self.proj_head(feats)
+
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
 
     device = 'cuda' if th.cuda.is_available() else 'cpu'
@@ -160,6 +170,7 @@ for name, layer in model.named_children():
         for n, l in layer.named_modules():
             if hasattr(l, 'reset_parameters'):
                 l.reset_parameters()
+model = FCN_clf(model)
 
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
