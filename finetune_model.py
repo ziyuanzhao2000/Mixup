@@ -77,10 +77,11 @@ class FCN_clf(nn.Module):
         self.encoder = fcn_model
         self.proj_head = nn.Sequential(
             nn.Linear(128, 32),
-            nn.BatchNorm1d(128),
+            nn.BatchNorm1d(32),
             nn.ReLU(),
             nn.Linear(32, n_classes)
         )
+
 
     def forward(self, x):
         _, feats = self.encoder(x)
