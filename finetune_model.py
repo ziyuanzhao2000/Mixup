@@ -170,7 +170,7 @@ for name, layer in model.named_children():
         for n, l in layer.named_modules():
             if hasattr(l, 'reset_parameters'):
                 l.reset_parameters()
-model = FCN_clf(model)
+model = FCN_clf(model).to(device)
 
 optimizer = th.optim.Adam(model.parameters())
 LossListM, AccListM = train_mixup_model_epoch(model, training_set, test_set,
