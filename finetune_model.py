@@ -180,9 +180,10 @@ def test_model(model, training_set, test_set):
             H_te[idx_te] = H_te_i
             y_te[idx_te] = y_te_i
 
-    H_te = to_np(nn.functional.normalize(H_te))
-    y_te = to_np(y_te)
-
+    H_te = to_np(nn.functional.normalize(H_te)) # latent feature
+    y_te = to_np(y_te) # target
+    print(H_te.shape, y_te.shape)
+    print(H_te, y_te)
     clf = KNeighborsClassifier(n_neighbors=1).fit(H_tr, y_tr)
 
     return clf.score(H_te, y_te)
@@ -199,7 +200,7 @@ x_te, y_te = unison_shuffled_copies(x_te, y_te)
 ntrain = len(x_tr) # set the size of partial training set to use
 
 device = 'cuda' if th.cuda.is_available() else 'cpu'
-epochs, LossList, AccList = 10, [], []
+epochs, LossList, AccList = 50, [], []
 
 alpha = 1.0
 
