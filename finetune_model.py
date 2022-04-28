@@ -13,13 +13,15 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-window_len = 1500
+alias = 'epilepsy'
+model_name = 'sleepEDF_model'
+window_len = 178
 basepath = f'{os.getcwd()}/data'
 
-x_tr = np.load(os.path.join(basepath, 'emg', f"train_input_{window_len}.npy"))
-y_tr = np.load(os.path.join(basepath, 'emg', f"train_output_{window_len}.npy"))
-x_te = np.load(os.path.join(basepath, 'emg', f"test_input_{window_len}.npy"))
-y_te = np.load(os.path.join(basepath, 'emg', f"test_output_{window_len}.npy"))
+x_tr = np.load(os.path.join(basepath, alias,  f"train_input_{window_len}.npy"))
+y_tr = np.load(os.path.join(basepath, alias,  f"train_output_{window_len}.npy"))
+x_te = np.load(os.path.join(basepath, alias, f"test_input_{window_len}.npy"))
+y_te = np.load(os.path.join(basepath, alias, f"test_output_{window_len}.npy"))
 
 
 class MyDataset(Dataset):
@@ -101,7 +103,7 @@ class MixUpLoss(th.nn.Module):
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
 
     device = 'cuda' if th.cuda.is_available() else 'cpu'
-    batch_size_tr = 32 #len(training_set.x)
+    batch_size_tr = 20 #len(training_set.x)
     LossList, AccList
     criterion = MixUpLoss(device, batch_size_tr)
 
@@ -204,7 +206,7 @@ alpha = 1.0
 training_set = MyDataset(x_tr[0:ntrain,:], y_tr[0:ntrain,:])
 test_set = MyDataset(x_te, y_te)
 
-model = th.load(os.path.join(basepath, 'model'), map_location=th.device('cpu'))
+model = th.load(os.path.join(basepath, model_name), map_location=th.device('cpu'))
 # reset weights of proj_head
 for name, layer in model.named_children():
     if name == 'proj_head':
