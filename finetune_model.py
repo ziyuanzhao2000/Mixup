@@ -86,7 +86,6 @@ class FCN_clf(nn.Module):
 
     def forward(self, x):
         _, feats = self.encoder(x)
-        print('feats', feats)
         return self.proj_head(feats)
 
 def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epochs):
@@ -140,9 +139,9 @@ def test_model(model, training_set, test_set):
     target_prob = F.one_hot(target, num_classes=n_classes)
     pred_prob = yhat_te
     pred = pred_prob.argmax(dim=1)
-    print(target)
-    print(pred)
-    print(pred_prob)
+#     print(target)
+#     print(pred)
+#     print(pred_prob)
     metrics_dict = {}
     metrics_dict['Accuracy'] = sklearn.metrics.accuracy_score(target, pred)
     metrics_dict['Precision'] = sklearn.metrics.precision_score(target, pred, average='macro')
