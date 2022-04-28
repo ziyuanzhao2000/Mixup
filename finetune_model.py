@@ -131,7 +131,7 @@ def test_model(model, training_set, test_set):
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
             yhat_te_i = model(x_te)
-            print(x_te, yhat_te_i)
+#             print(x_te, yhat_te_i)
             yhat_te[idx_te] = model(x_te) # yhat are pre-softmax values
             y_te[idx_te] = y_te_i
 
