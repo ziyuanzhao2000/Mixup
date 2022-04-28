@@ -14,10 +14,10 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-alias = 'epilepsy'
+alias = 'pFD_B'
 model_name = 'sleepEDF_model'
-window_len = 178
-n_classes = 2
+window_len = 5120
+n_classes = 3
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias,  f"train_input.npy"))
