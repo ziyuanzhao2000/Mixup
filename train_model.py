@@ -15,8 +15,8 @@ def to_np(x):
     return x.cpu().detach().numpy()
 
 import os
-window_len = 178
-alias = 'sleepEDF'
+window_len = 5120
+alias = 'pFD_A'
 basepath = f'{os.getcwd()}/data'
 
 x_tr = np.load(os.path.join(basepath, alias, f"train_input.npy"))
@@ -199,6 +199,7 @@ x_te, y_te = unison_shuffled_copies(x_te, y_te)
 ntrain = len(x_tr) # set the size of partial training set to use
 
 device = 'cuda' if th.cuda.is_available() else 'cpu'
+print('running on ', device)
 epochs, LossList, AccList = 200, [], []
 
 alpha = 1.0
