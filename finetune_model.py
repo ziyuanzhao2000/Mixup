@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from sklearn.neighbors import KNeighborsClassifier
 import torch.nn.functional as F
+import sklearn
 
 def to_np(x):
     return x.cpu().detach().numpy()
