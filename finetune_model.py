@@ -98,9 +98,6 @@ def train_mixup_model_epoch(model, training_set, test_set, optimizer, alpha, epo
 
             optimizer.zero_grad()
             z = model(x)
-            print(z.shape, y[:,0].shape)
-#             print(z)
-#             print(y)
             loss= criterion(z, y[:,0])
             loss.backward()
             optimizer.step()
@@ -128,6 +125,7 @@ def test_model(model, training_set, test_set):
 
     for idx_te, (x_te, y_te_i) in enumerate(test_generator):
         with th.no_grad():
+            print(yhat_te.shape, model(x_te).shape)
             yhat_te[idx_te] = model(x_te) # yhat are pre-softmax values
             y_te[idx_te] = y_te_i
 
